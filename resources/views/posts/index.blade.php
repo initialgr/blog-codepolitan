@@ -26,14 +26,17 @@
 <body>
     <div class="container">
         <h1>Blog Codepolitan</h1>
-        @php($number = 1)
-        @foreach ($posts as $post)
-        <div class="blog">
 
-            <h3>{{ $post[0] }} <small>#{{ $number }}</small></h3>
-            <p>{{ $post[1] }}</p>
+        @foreach ($posts as $post)
+        @php($post = explode(",", $post))
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ $post[1] }}</h5>
+                <p class="card-text">{{ $post[2] }}</p>
+                <p class="card-text"><small class="text-muted">Last updated at {{ date('d M Y H:i', strtotime($post[3])) }}</small></p>
+                <a href="#" class="btn btn-primary">Selengkapnya</a>
+            </div>
         </div>
-        @php($number++)
         @endforeach
     </div>
 </body>
