@@ -63,9 +63,13 @@ class PostController extends Controller
     public function show($id)
     {
         $post = Post::where('id', $id)->first();
+        $comments = $post->comments()->limit(2)->get();
+        $total_comments = $post->total_comments();
 
         $view_data = [
-            'post' => $post
+            'post' => $post,
+            'comments' => $comments,
+            'total_comments' => $total_comments,
         ];
 
         return view('posts.show', $view_data);
