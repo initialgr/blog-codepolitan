@@ -15,7 +15,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = DB::table('posts')->select('id', 'title', 'content', 'created_at')->get();
+        $posts = DB::table('posts')
+            ->select('id', 'title', 'content', 'created_at')
+            ->where('active', true)
+            ->get();
         $view_data = [
             'posts' => $posts
         ];
@@ -123,6 +126,10 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('posts')
+            ->where('id', $id)
+            ->delete();
+
+        return redirect('posts');
     }
 }
