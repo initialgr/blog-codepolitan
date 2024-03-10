@@ -7,6 +7,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -65,8 +66,11 @@ class PostController extends Controller
 
         Mail::to(Auth::user()->email)->send(new BlogPosted($post));
 
+        $this->notify_telegram($post);
+
         return redirect('posts');
     }
+
 
     /**
      * Display the specified resource.
@@ -150,5 +154,20 @@ class PostController extends Controller
         Post::where('id', $id)->delete();
 
         return redirect('posts');
+    }
+
+    private function notify_telegram($post)
+    {
+        $api_token = "{{TOKEN}}";
+        $url = "https://api.telegram.org/bot{$api_token}/sendMessage";
+        $chat_id = "{{CHAT_ID}}";
+        $content = "Ada postingan baru nih di blog kamu dengan judul: <strong>\"{$post->title}\"</strong>";
+
+        $data = [
+            'chat_id' => $chat_id,
+            'text' => $content,
+            'parse_mode' => 'HTML'
+        ];
+        Http::post($url, $data);
     }
 }
